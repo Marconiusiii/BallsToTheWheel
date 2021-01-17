@@ -91,6 +91,21 @@ A bet that covers the numbers  1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34. 
 ## Roulette Number Grid Layout
 
 <table>
+<caption>Testing</caption>
+<tr>
+<td style="background-color: DarkGreen; color: #fff">0/00</td><td style="background-color: #8b0000; color: #fff">Red 1</td><td style="background-color: #000; color: #fff">Black 4</td><td style="background-color: #8b0000; color: #fff">Red 7</td>
+</tr>
+<tr>
+<td>Black 2</td><td style="background-color: #8b0000; color: #fff">Red 5</td><td>Black 8</td>
+</tr>
+<tr>
+<td>Red 3</td><td>Black 6</td><td>Red 9</td>
+</tr>
+</table>
+
+
+
+<table>
 <caption>Accessible depiction of the Roulette number grid</caption>
 <tbody>
 <tr>

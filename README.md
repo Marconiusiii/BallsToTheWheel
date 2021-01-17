@@ -94,7 +94,7 @@ A bet that covers the numbers  1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34. 
 <caption>Accessible depiction of the Roulette number grid</caption>
 <tbody>
 <tr>
-<td>Red 1</td><td>Black 4</td><td>Red 7</td><td>Black 10</td><td>Red 13</td><td>Black 16</td><td>Red 19</td><td>Black 22</td><td>Red 25</td><td>Black 28</td><td>Red 31</td><td>Black 34</td>
+<td rowspan="3">Green 0/00</td><td>Red 1</td><td>Black 4</td><td>Red 7</td><td>Black 10</td><td>Red 13</td><td>Black 16</td><td>Red 19</td><td>Black 22</td><td>Red 25</td><td>Black 28</td><td>Red 31</td><td>Black 34</td>
 </tr><tr>
 <td>Black 2</td><td>Red 5</td><td>Black 8</td><td>Red 11</td><td>Black 14</td><td>Red 17</td><td>Black 20</td><td>Red 23</td><td>Black 26</td><td>Red 29</td><td>Black 32</td><td>Red 35</td>
 </tr>

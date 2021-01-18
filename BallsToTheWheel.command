@@ -79,7 +79,7 @@ def spin():
 	return spinOut
 
 def roulette():
-	global red, black, even, odd, dozens, firstHalf, secondHalf, streets, lines, columns
+	global red, black, even, odd, dozens, firstHalf, secondHalf, streets, lines, columns, verbose
 
 	ball = spin()
 	outcome = ''
@@ -105,20 +105,85 @@ def roulette():
 	for key in columns:
 		if ball in columns[key]:
 			outcome += key + ', '
+	if verbose:
+		print(outcome)
 
-	print(outcome)
+# Bet Prompt and Out of Money
+
+def betPrompt():
+	global bank
+	while True:
+		try:
+			playerBet =  int(input("\t$> "))
+		except ValueError:
+			print("\tThat wasn't a number!")
+			continue
+		if playerBet > bank:
+			print("\tYou simply don't have enough money to do that! DO you want to add more to your bankroll?")
+			addMore = input(">")
+			if addMore.lower() in ['y', 'yes', 'atm', 'help', 'more money']:
+				outOfMoney()
+			continue
+		elif playerBet <= 0:
+			print("Nice try, hot shot. You have to make a bet to play!")
+			continue
+		else:
+			return playerBet
+
+def outOfMoney():
+	global bank
+	if bank <= 0:
+		print("\tYou are totally out of money. Let's hit the ATM again and get you more cash. How much do you want?")
+	else:
+		print("\tYour chips are getting really low. How much would you like to add to your bankroll?")
+	while True:
+		try:
+			cash = int(input("\t$>"))
+		except ValueError:
+			print("\tYou forgot what numbers were and the ATM beeps at you in annoyance. Try again.")
+			continue
+		if cash <= 0:
+			print("\tWhat am I, a bank? This is for withdrawals only! Try again.")
+			continue
+		else:
+			bank += cash
+			break
+	print("\tAlright, starting you off again with ${}. Don't lose it all this time!".format(bank))
 
 
+
+verbose = False
 
 # Game Start
 
-print("Valls to the Wheel v.{}\n\tBy: Marco Salsiccia".format(version))
+print("Balls to the Wheel v.{}\n\tBy: Marco Salsiccia".format(version))
+
+print("How much would you like to cash in for your bank?")
+while True:
+	try:
+		bank = int(input("$"))
+		break
+	except ValueError:
+		print("That wasn't a number, doofus.")
+		continue
+print("Great, starting off with ${bank}. Good luck!".format(bank=bank))
 
 
 while True:
-	print("Hit Enter to Spin!")
-	input("> ")
-	roulette()
 
-	input("Go again! >")
-	continue
+	print("Betting!")
+	choice = input("> ")
+	if choice == 'v' and verbose == False:
+		print("Verbose Mode On")
+		verbose = True
+		continue
+	elif choice == 'v' and verbose == True:
+		print("Verbose Mode Off")
+		verbose = False
+		continue
+	elif choice == 'x':
+		roulette()
+		continue
+	else:
+		print("Invalid entry! Try Again.")
+		continue

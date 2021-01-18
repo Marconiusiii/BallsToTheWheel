@@ -162,7 +162,7 @@ def spin():
 	return spinOut
 
 def roulette():
-	global red, black, even, odd, dozens, firstHalf, secondHalf, streets, lines, columns, verbose
+	global red, black, even, odd, dozens, firstHalf, secondHalf, straightUp, splits, corners, streets, lines, columns, outBets, bank, verbose
 
 	ball = spin()
 	outcome = ''
@@ -190,6 +190,26 @@ def roulette():
 			outcome += key + ', '
 	if verbose:
 		print(outcome)
+
+# Payout
+
+	if outBets["Red"] > 0:
+		if ball in red:
+			print("You won ${} on Red!".format(outBets["Red"]))
+			bank += outBets["Red"]
+		else:
+			print("You lost ${} from Red.".format(outBets["Red"]))
+			bank -= outBets["Red"]
+	if outBets["Black"] > 0:
+		if ball in black:
+			print("You won ${} on Black!".format(outBets["Black"]))
+			bank += outBets["Black"]
+		else:
+			print("You lost ${} from Black.".format(outBets["Black"]))
+			bank -= outBets["Black"]
+
+	for key in outBets:
+		outBets[key] = 0
 
 # Bet Prompt and Out of Money
 
@@ -239,6 +259,14 @@ straightUp = {}
 for number in range(38):
 	straightUp[number] = 0
 
+splitBets = {}
+for number in range(1, 56):
+	splitBets[number] = 0
+
+cornerBets = {}
+for number in range(1, 23):
+	cornerBets[number] = 0
+
 streetBets = {}
 for number in range(13):
 	streetBets[number] = 0
@@ -268,6 +296,61 @@ inBets = {
 "snake": 0
 }
 
+def bet(choice):
+	if choice.lower() == 'r':
+		print("How much on Red?")
+		outBets["Red"] = betPrompt()
+		print("Ok, ${} on Red.".format(outBets["Red"]))
+	elif choice.lower() == 'b':
+		print("How much on Black?")
+		outBets["Black"] = betPrompt()
+		print("Ok, ${} on Black.".format(outBets["Black"]))
+	elif choice.lower() == 'e':
+		print("How much on Even?")
+		outBets["Even"] = betPrompt()
+		print("Ok, ${} on Even.".format(outBets["Even"]))
+	elif choice.lower() == 'o':
+		print("How much on Odd?")
+		outBets["Odd"] = betPrompt()
+		print("Ok, ${} on Odd.".format(outBets["Odd"]))
+	elif choice == 'h1':
+		print("How much on the First Half?")
+		outBets["1st Half"] = betPrompt()
+		print("Ok, ${} on the First Half.".format(outBets["1st Half"]))
+	elif choice == 'h2':
+		print("How much on the Second Half?")
+		outBets["2nd Half"] = betPrompt()
+		print("Ok, ${} on the Second Half.".format(outBets["2nd Half"]))
+	elif choice == 'd1':
+		print("How much on the First Dozen?")
+		outBets["1st Dozen"] = betPrompt()
+		print("Ok, ${} on the First Dozen.".format(outBets["1st Dozen"]))
+	elif choice == 'd2':
+		print("How much on the Second Dozen?")
+		outBets["2nd Dozen"] = betPrompt()
+		print("Ok, ${} on the Second Dozen.".format(outBets["2nd Dozen"]))
+	elif choice == 'd3':
+		print("How much on the THird Dozen?")
+		outBets["3rd Dozen"] = betPrompt()
+		print("Ok, ${} on the Third Dozen.".format(outBets["3rd Dozen"]))
+	elif choice == 'c1':
+		print("How much on Column 1?")
+		outBets["col1"] = betPrompt()
+		print("Ok, ${} on Column 1.".format(outBets["col1"]))
+	elif choice == 'c2':
+		print("How much on Column 2?")
+		outBets["col2"] = betPrompt()
+		print("Ok, ${} on Column 2.".format(outBets["col2"]))
+	elif choice == 'c3':
+		print("How much on Column 3?")
+		outBets["col3"] = betPrompt()
+		print("Ok, ${} on Column 3.".format(outBets["col3"]))
+
+
+	else:
+		print("That's not a bet! Try again.")
+	
+
 
 
 verbose = False
@@ -286,8 +369,9 @@ while True:
 		continue
 print("Great, starting off with ${bank}. Good luck!".format(bank=bank))
 
-while True:
 
+while True:
+	print("You have ${} in the bank.".format(bank))
 	print("Place your Bets!")
 	choice = input("> ")
 	if choice == 'v' and verbose == False:
@@ -298,9 +382,10 @@ while True:
 		print("Verbose Mode Off")
 		verbose = False
 		continue
-	elif choice == 'x':
+
+	if choice == 'x':
 		roulette()
 		continue
 	else:
-		print("Invalid entry! Try Again.")
+		bet(choice)
 		continue

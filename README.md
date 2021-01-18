@@ -90,15 +90,16 @@ A bet that covers the numbers  1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34. 
 
 ## Roulette Number Grid Layout
 
-Navigate this table to check out how the numbers are arranged across the game table.
+Navigate this table to check out how the numbers are arranged across the game table. On github, this works better with screen readers with the browser set to Reader mode.
 
 <table>
 <caption>Accessible depiction of the Roulette number grid</caption>
 <tbody>
 <tr>
 <td style="background-color: DarkGreen; color: #fff" rowspan="3">Green 0/00</td><td style="background-color: #8b0000; color: #fff">Red 1</td><td style="background-color: #000; color: #fff">Black 4</td><td style="background-color: #8b0000; color: #fff">Red 7</td><td style="background-color: #000; color: #fff">Black 10</td><td style="background-color: #000; color: #fff">Black 13</td><td style="background-color: #8b0000; color: #fff">Red 16</td><td style="background-color: #8b0000; color: #fff">Red 19</td><td style="background-color: #000; color: #fff">Black 22</td><td style="background-color: #8b0000; color: #fff">Red 25</td><td style="background-color: #000; color: #fff">Black 28</td><td style="background-color: #000; color: #fff">Black 31</td><td style="background-color: #8b0000; color: #fff">Red 34</td>
-</tr><tr>
-<td style="background-color: #000; color: #fff">Black 2</td><td style="background-color: #8b0000; color: #fff">Red 5</td><td style="background-color: #000; color: #fff">Black 8</td><td style="background-color: #000; color: #fff">Black 11</td><td style="background-color: #8b0000; color: #fff">Red 14</td><td style="background-color: #000; color: #fff">Black 17</td><td style="background-color: #000; color: #fff">Black 20</td><td>Red style="background-color: #8b0000; color: #fff" 23</td><td style="background-color: #000; color: #fff">Black 26</td><td style="background-color: #000; color: #fff">Black 29</td><td style="background-color: #8b0000; color: #fff">Red 32</td><td style="background-color: #000; color: #fff">Black 35</td>
+</tr>
+<tr>
+<td style="background-color: #000; color: #fff">Black 2</td><td style="background-color: #8b0000; color: #fff">Red 5</td><td style="background-color: #000; color: #fff">Black 8</td><td style="background-color: #000; color: #fff">Black 11</td><td style="background-color: #8b0000; color: #fff">Red 14</td><td style="background-color: #000; color: #fff">Black 17</td><td style="background-color: #000; color: #fff">Black 20</td><td style="background-color: #8b0000; color: #fff">Red 23</td><td style="background-color: #000; color: #fff">Black 26</td><td style="background-color: #000; color: #fff">Black 29</td><td style="background-color: #8b0000; color: #fff">Red 32</td><td style="background-color: #000; color: #fff">Black 35</td>
 </tr>
 <tr>
 <td style="background-color: #8b0000; color: #fff">Red 3</td><td style="background-color: #000; color: #fff">Black 6</td><td style="background-color: #8b0000; color: #fff">Red 9</td><td style="background-color: #8b0000; color: #fff">Red 12</td><td style="background-color: #000; color: #fff">Black 15</td><td style="background-color: #8b0000; color: #fff">Red 18</td><td style="background-color: #8b0000; color: #fff">Red 21</td><td style="background-color: #000; color: #fff">Black 24</td><td style="background-color: #8b0000; color: #fff">Red 27</td><td style="background-color: #8b0000; color: #fff">Red 30</td><td style="background-color: #000; color: #fff">Black 33</td><td style="background-color: #8b0000; color: #fff">Red 36</td>

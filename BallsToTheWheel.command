@@ -5,29 +5,29 @@ from random import *
 version = "1.0"
 
 
-# 1-10, 19-28 odd = red, 11-18, 29-36, even = red
 # Table Setup
 
 red = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
 black = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
 
 dozens = {
-"1st Dozen": range(1, 13),
-"2nd Dozen": range(13, 25),
-"3rd Dozen": range(25, 37)
+1: range(1, 13),
+2: range(13, 25),
+3: range(25, 37)
 }
 
-firstHalf = range(1, 19)
-secondHalf = range(19, 37)
-
+half = {
+1: range(1, 19),
+2: range(19, 37)
+}
 
 even = [x for x in range(2, 38, 2)]
 odd = [x for x in range(1, 37, 2)]
 
 columns = {
-"Column 1": range(1, 37, 3),
-"Column 2": range(2, 38, 3),
-"Column 3": range(3, 39, 3)
+1: [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34],
+2: [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
+3: [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36]
 }
 
 splits = {
@@ -162,7 +162,7 @@ def spin():
 	return spinOut
 
 def roulette():
-	global red, black, even, odd, dozens, firstHalf, secondHalf, straightUp, splits, corners, streets, lines, columns, outBets, bank, verbose
+	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, bank, verbose
 
 	ball = spin()
 	outcome = ''
@@ -174,42 +174,42 @@ def roulette():
 	else:
 		pass
 
-	if ball in firstHalf:
+	if ball in half[1]:
 		outcome += "1st Half, "
-	elif ball in secondHalf:
+	elif ball in half[2]:
 		outcome += "2nd Half, "
 	else:
 		pass
 
 	for key in dozens:
 		if ball in dozens[key]:
-			outcome += key + ', '
+			outcome += "Dozen {}, ".format(key)
 
 	for key in columns:
 		if ball in columns[key]:
-			outcome += key + ', '
+			outcome += "Column {}, ".format(key)
 	if verbose:
 		print(outcome)
 
 # Payout
 
-	if outBets["Red"] > 0:
-		if ball in red:
-			print("You won ${} on Red!".format(outBets["Red"]))
-			bank += outBets["Red"]
-		else:
-			print("You lost ${} from Red.".format(outBets["Red"]))
-			bank -= outBets["Red"]
-	if outBets["Black"] > 0:
-		if ball in black:
-			print("You won ${} on Black!".format(outBets["Black"]))
-			bank += outBets["Black"]
-		else:
-			print("You lost ${} from Black.".format(outBets["Black"]))
-			bank -= outBets["Black"]
-
 	for key in outBets:
-		outBets[key] = 0
+		payout = 0
+		if outBets[key] > 0:
+			if key == "Red" and ball in red or key == "Black" and ball in black or key == "Even" and ball in even or key == "Odd" and ball in odd or key == "1st Half" and ball in half[1] or key == "2nd Half" and ball in half[2]:
+				payout = outBets[key]
+			elif key == "Column 1" and ball in columns[1] or key == "Column 2" and ball in columns[2] or key == "Column 3" and ball in columns[3] or key == "1st Dozen" and ball in dozens[1] or key == "2nd Dozen" and ball in dozens[2] or key == "3rd Dozen" and ball in dozens[3]:
+				payout = outBets[key] * 2
+			else:
+				payout = 0
+
+			if payout > 0:
+				print("You won ${num} on the {bet} bet!".format(num=payout, bet=key))
+				bank += payout
+			else:
+				print("You lost ${num} from the {bet} bet.".format(num=outBets[key], bet=key))
+				bank -= outBets[key]
+			outBets[key] = 0
 
 # Bet Prompt and Out of Money
 
@@ -280,76 +280,56 @@ outBets = {
 "Black": 0,
 "Even": 0,
 "Odd": 0,
-"1st 12": 0,
-"2nd 12": 0,
-"3rd 12": 0,
+"1st Dozen": 0,
+"2nd Dozen": 0,
+"3rd Dozen": 0,
 "1st Half": 0,
 "2nd Half": 0,
-"col1": 0,
-"col2": 0,
-"col3": 0
+"Column 1": 0,
+"Column 2": 0,
+"Column 3": 0
 }
 
 inBets = {
-"topLine": 0,
-"basket": 0,
-"snake": 0
+"Top Line": 0,
+"Basket": 0,
+"Snake": 0
 }
 
 def bet(choice):
-	if choice.lower() == 'r':
-		print("How much on Red?")
-		outBets["Red"] = betPrompt()
-		print("Ok, ${} on Red.".format(outBets["Red"]))
-	elif choice.lower() == 'b':
-		print("How much on Black?")
-		outBets["Black"] = betPrompt()
-		print("Ok, ${} on Black.".format(outBets["Black"]))
-	elif choice.lower() == 'e':
-		print("How much on Even?")
-		outBets["Even"] = betPrompt()
-		print("Ok, ${} on Even.".format(outBets["Even"]))
-	elif choice.lower() == 'o':
-		print("How much on Odd?")
-		outBets["Odd"] = betPrompt()
-		print("Ok, ${} on Odd.".format(outBets["Odd"]))
-	elif choice == 'h1':
-		print("How much on the First Half?")
-		outBets["1st Half"] = betPrompt()
-		print("Ok, ${} on the First Half.".format(outBets["1st Half"]))
-	elif choice == 'h2':
-		print("How much on the Second Half?")
-		outBets["2nd Half"] = betPrompt()
-		print("Ok, ${} on the Second Half.".format(outBets["2nd Half"]))
-	elif choice == 'd1':
-		print("How much on the First Dozen?")
-		outBets["1st Dozen"] = betPrompt()
-		print("Ok, ${} on the First Dozen.".format(outBets["1st Dozen"]))
-	elif choice == 'd2':
-		print("How much on the Second Dozen?")
-		outBets["2nd Dozen"] = betPrompt()
-		print("Ok, ${} on the Second Dozen.".format(outBets["2nd Dozen"]))
-	elif choice == 'd3':
-		print("How much on the THird Dozen?")
-		outBets["3rd Dozen"] = betPrompt()
-		print("Ok, ${} on the Third Dozen.".format(outBets["3rd Dozen"]))
-	elif choice == 'c1':
-		print("How much on Column 1?")
-		outBets["col1"] = betPrompt()
-		print("Ok, ${} on Column 1.".format(outBets["col1"]))
-	elif choice == 'c2':
-		print("How much on Column 2?")
-		outBets["col2"] = betPrompt()
-		print("Ok, ${} on Column 2.".format(outBets["col2"]))
-	elif choice == 'c3':
-		print("How much on Column 3?")
-		outBets["col3"] = betPrompt()
-		print("Ok, ${} on Column 3.".format(outBets["col3"]))
-
+	pick = ''
+	if choice in ['r', 'b', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3', 'o', 'e', 'h1', 'h2']:
+		if choice.lower() == 'r':
+			pick = "Red"
+		elif choice == 'b':
+			pick = "Black"
+		elif choice == 'e':
+			pick = "Even"
+		elif choice == 'o':
+			pick = "Odd"
+		elif choice == 'd1':
+			pick = "1st Dozen"
+		elif choice == 'd2':
+			pick = "2nd Dozen"
+		elif choice == 'd3':
+			pick = '3rd Dozen'
+		elif choice == 'h1':
+			pick = "1st Half"
+		elif choice == 'h2':
+			pick = "2nd Half"
+		elif choice == 'c1':
+			pick = "Column 1"
+		elif choice == 'c2':
+			pick = "Column 2"
+		elif choice == 'c3':
+			pick = "Column 3"
+		print("How much on {}?".format(pick))
+		outBets[pick] = betPrompt()
+		print("Ok, ${num} on {bet}.".format(num=outBets[pick], bet=pick))
 
 	else:
 		print("That's not a bet! Try again.")
-	
+
 
 
 

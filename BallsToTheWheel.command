@@ -211,6 +211,15 @@ def roulette():
 				bank -= outBets[key]
 			outBets[key] = 0
 
+	for key in straightUp:
+		if straightUp[key] > 0:
+			if ball == key:
+				print("Holy crap! You won ${win} on the {num}!".format(win=straightUp[key]*35, num=key))
+				bank += straightUp[key] * 35
+			else:
+				print("You lost ${lose} from the {num}.".format(lose=straightUp[key], num=key))
+				bank -= straightUp[key]
+	straightUp = {}
 # Bet Prompt and Out of Money
 
 def betPrompt():
@@ -260,20 +269,12 @@ for number in range(38):
 	straightUp[number] = 0
 
 splitBets = {}
-for number in range(1, 56):
-	splitBets[number] = 0
 
 cornerBets = {}
-for number in range(1, 23):
-	cornerBets[number] = 0
 
 streetBets = {}
-for number in range(13):
-	streetBets[number] = 0
 
 lineBets = {}
-for number in range(7):
-	lineBets[number] = 0
 
 outBets = {
 "Red": 0,
@@ -297,6 +298,7 @@ inBets = {
 }
 
 def bet(choice):
+	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp
 	pick = ''
 	if choice in ['r', 'b', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3', 'o', 'e', 'h1', 'h2']:
 		if choice.lower() == 'r':
@@ -326,12 +328,39 @@ def bet(choice):
 		print("How much on {}?".format(pick))
 		outBets[pick] = betPrompt()
 		print("Ok, ${num} on {bet}.".format(num=outBets[pick], bet=pick))
-
+	elif choice == 'n':
+		straight()
 	else:
 		print("That's not a bet! Try again.")
 
+def straight():
+	global straightUp
+	while True:
+		for key in straightUp:
+			if straightUp[key] > 0:
+				print("Current Bets:\n")
+				for bets in straightUp:
+					if straightUp[bets] > 0:
+						print("${bet} on {num}.".format(bet=straightUp[bets], num=bets))
+				break
+		print("Enter the number you want to bet! 1-36: ")
+		try:
+			bet = int(input("> "))
+		except ValueError:
+			break
+		if bet in range(1, 37):
+			print("How much on {}?".format(bet))
+			straightUp[bet] = betPrompt()
+			print("Ok, ${bet} on {num}.".format(bet=straightUp[bet], num=bet))
+			continue
+		else:
+			print("Ending straight up number betting.")
+			break
 
 
+def betSplits():
+	global splits, splitBets
+	
 
 verbose = False
 

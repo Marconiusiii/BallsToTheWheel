@@ -89,52 +89,52 @@ splits = {
 }
 
 corners = {
-1: [1, 2, 4, 5],
-2: [2, 3, 5, 6],
-3: [4, 5, 7, 8],
-4: [5, 6, 8, 9],
-5: [7, 8, 10, 11],
-6: [8, 9, 11, 12],
-7: [10, 11, 13, 14],
-8: [11, 12, 14, 15],
-9: [13, 14, 16, 17],
-10: [14, 15, 17, 18],
-11: [16, 17, 19, 20],
-12: [17, 18, 20, 21],
-13: [19, 20, 22, 23],
-14: [20, 21, 23, 24],
-15: [22, 23, 25, 26],
-16: [23, 24, 26, 27],
-17: [25, 26, 28, 29],
-18: [26, 27, 29, 30],
-19: [28, 29, 31, 32],
-20: [29, 30, 32, 33],
-21: [31, 32, 34, 35],
-22: [32, 33, 35, 36]
+'1': [1, 2, 4, 5],
+'2': [2, 3, 5, 6],
+'3': [4, 5, 7, 8],
+'4': [5, 6, 8, 9],
+'5': [7, 8, 10, 11],
+'6': [8, 9, 11, 12],
+'7': [10, 11, 13, 14],
+'8': [11, 12, 14, 15],
+'9': [13, 14, 16, 17],
+'10': [14, 15, 17, 18],
+'11': [16, 17, 19, 20],
+'12': [17, 18, 20, 21],
+'13': [19, 20, 22, 23],
+'14': [20, 21, 23, 24],
+'15': [22, 23, 25, 26],
+'16': [23, 24, 26, 27],
+'17': [25, 26, 28, 29],
+'18': [26, 27, 29, 30],
+'19': [28, 29, 31, 32],
+'20': [29, 30, 32, 33],
+'21': [31, 32, 34, 35],
+'22': [32, 33, 35, 36]
 }
 
 streets = {
-1: range(4),
-2: range(4, 7),
-3: range(7, 10),
-4: range(10, 13),
-5: range(13, 16),
-6: range(16, 19),
-7: range(19, 22),
-8: range(22, 25),
-9: range(25, 28),
-10: range(28, 31),
-11: range(31, 34),
-12: range(34, 37)
+'1': [1, 2, 3],
+'2': [4, 5, 6],
+'3': [7, 8, 9],
+'4': [10, 11, 12],
+'5': [13, 14, 15],
+'6': [16, 17, 18],
+'7': [19, 20, 21],
+'8': [22, 23, 24],
+'9': [25, 26, 27],
+'10': [28, 29, 30],
+'11': [31, 32, 33],
+'12': [34, 35, 36]
 }
 
 lines = {
-1: range(1, 7),
-2: range(7, 13),
-3: range(13, 19),
-4: range(19, 25),
-5: range(25, 31),
-6: range(31, 37)
+'1': range(1, 7),
+'2': range(7, 13),
+'3': range(13, 19),
+'4': range(19, 25),
+'5': range(25, 31),
+'6': range(31, 37)
 }
 
 allNumbers = range(38)
@@ -162,7 +162,7 @@ def spin():
 	return spinOut
 
 def roulette():
-	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, bank, verbose
+	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, lineBets, bank, verbose
 
 	ball = spin()
 	outcome = ''
@@ -181,13 +181,14 @@ def roulette():
 	else:
 		pass
 
-	for key in dozens:
-		if ball in dozens[key]:
-			outcome += "Dozen {}, ".format(key)
-
 	for key in columns:
 		if ball in columns[key]:
 			outcome += "Column {}, ".format(key)
+
+	for key in streets:
+		if ball in streets[key]:
+			outcome += "Street {}, ".format(key)
+
 	if verbose:
 		print(outcome)
 
@@ -253,6 +254,16 @@ def roulette():
 				bank -= cornerBets[key]
 	cornerBets = {}
 
+# Line Bet Payout
+	for key in lineBets:
+		if lineBets[key] > 0:
+			if ball in lines[key]:
+				print("Nice, you won ${win} on Line {num}!".format(win=lineBets[key] * 5, num=key))
+				bank += lineBets[key] * 5
+			else:
+				print("You lost ${loss} from Line {num}.".format(loss=lineBets[key], num=key))
+				bank -= lineBets[key]
+	lineBets = {}
 
 
 
@@ -370,7 +381,8 @@ def bet(choice):
 		split()
 	elif choice == 'st':
 		street()
-
+	elif choice == 'l':
+		line()
 	elif choice == 'co':
 		corner()
 	else:
@@ -438,7 +450,7 @@ def street():
 				print("${bet} on Street {num}".format(bet=streetBets[key], num=key))
 		print("Choose your Street:\n")
 		for key in streets:
-			print("\t{num}. {street}".format(num=key, street=streets[key]))
+			print("\t{num}. Street {i}, {street}".format(num=key, i=streets[key][0], street=streets[key]))
 		choice = input("> ")
 		if choice == 'x':
 			print("Finishing Street Betting...")
@@ -447,13 +459,13 @@ def street():
 			print("Clearing your Street Bets.")
 			streetBets = {}
 			continue
-		elif int(choice) in streets:
+		elif choice in streets:
 			print("How much on Street {}?".format(choice))
-			streetBets[int(choice)] = betPrompt()
-			if streetBets[int(choice)] == 0:
+			streetBets[choice] = betPrompt()
+			if streetBets[choice] == 0:
 				print("Taking down your Street {} bet.".format(choice))
 			else:
-				print("Ok, ${bet} on Street {num}.".format(bet=streetBets[int(choice)], num=choice))
+				print("Ok, ${bet} on Street {num}.".format(bet=streetBets[choice], num=choice))
 			continue
 		else:
 			print("Invalid entry! Try again!")
@@ -478,20 +490,44 @@ def corner():
 			print("Clearing all your Corner Bets.")
 			cornerBets = {}
 			continue
-
-		elif int(choice) in corners:
+		elif choice in corners:
 			print("How much on Corner {}?".format(choice))
-			cornerBets[int(choice)] = betPrompt()
-			if cornerBets[int(choice)] == 0:
+			cornerBets[choice] = betPrompt()
+			if cornerBets[choice] == 0:
 				print("Taking down your Corner {} bet.".format(choice))
 			else:
-				print("Ok, ${bet} on Corner {num}.".format(bet=cornerBets[int(choice)], num=choice))
+				print("Ok, ${bet} on Corner {num}.".format(bet=cornerBets[choice], num=choice))
 			continue
 		else:
 			print("That doesn't work! Try again.")
 			continue
 
-
+def line():
+	global lines, lineBets
+	while True:
+		if len(lineBets) > 0:
+			print("Current Bets:\n")
+		for key in lineBets:
+			print("${bet} on Line {num}.".format(bet=lineBets[key], num=key))
+		print("Choose which Line to bet on:\n")
+		for key in lines:
+			print("{num}. {i}".format(num=key, i=list(lines[key])))
+		choice = input("> ")
+		if choice == 'x':
+			print("Finishing Line Betting...")
+			break
+		elif choice == 'cl':
+			print("Clearing your Line bets.")
+			lineBets = {}
+			continue
+		elif choice in lines:
+			print("How much on Line {}?".format(choice))
+			lineBets[choice] = betPrompt()
+			print("Ok, ${bet} on Line {num}.".format(bet=lineBets[choice], num=choice))
+			continue
+		else:
+			print("That's not a Line! Try again.")
+			continue
 verbose = False
 
 # Game Start

@@ -162,7 +162,7 @@ def spin():
 	return spinOut
 
 def roulette():
-	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, bank, verbose
+	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, bank, verbose
 
 	ball = spin()
 	outcome = ''
@@ -202,7 +202,6 @@ def roulette():
 				payout = outBets[key] * 2
 			else:
 				payout = 0
-
 			if payout > 0:
 				print("You won ${num} on the {bet} bet!".format(num=payout, bet=key))
 				bank += payout
@@ -220,6 +219,43 @@ def roulette():
 				print("You lost ${lose} from the {num}.".format(lose=straightUp[key], num=key))
 				bank -= straightUp[key]
 	straightUp = {}
+
+# Split Bets Payout
+	for key in splitBets:
+		if splitBets[key] > 0:
+			if ball in splitBets:
+				print("Holy Pants! You won ${win} on the {sp} Split!".format(win=splitBets[key]*17, sp=key))
+				bank += splitBets[key] * 17
+			else:
+				print("You lost ${loss} from the {sp} Split.".format(loss=splitBets[key], sp=key))
+				bank -= splitBets[key]
+	splitBets = {}
+
+# Street Bets Payout
+	for key in streetBets:
+		if streetBets[key] > 0:
+			if ball in streets[key]:
+				print("Wowsers! You won ${win} on Street {num}!".format(win=streetBets[key]*11, num=key))
+				bank += streetBets[key] * 11
+			else:
+				print("You lost ${loss} from Street {key}.".format(loss=streetBets[key], key=key))
+				bank -= streetBets[key]
+	streetBets = {}
+
+# Corner Bet Payout
+	for key in cornerBets:
+		if cornerBets[key] > 0:
+			if ball in corners[key]:
+				print("Woohoo! You won ${win} on Corner {num}!".format(win=cornerBets[key]*8, num=key))
+				bank += cornerBets[key] * 8
+			else:
+				print("You lost ${loss} from Corner {num}.".format(loss=cornerBets[key], num=key))
+				bank -= cornerBets[key]
+	cornerBets = {}
+
+
+
+
 # Bet Prompt and Out of Money
 
 def betPrompt():
@@ -330,6 +366,13 @@ def bet(choice):
 		print("Ok, ${num} on {bet}.".format(num=outBets[pick], bet=pick))
 	elif choice == 'n':
 		straight()
+	elif choice == 'sp':
+		split()
+	elif choice == 'st':
+		street()
+
+	elif choice == 'co':
+		corner()
 	else:
 		print("That's not a bet! Try again.")
 
@@ -357,10 +400,97 @@ def straight():
 			print("Ending straight up number betting.")
 			break
 
-
-def betSplits():
+def split():
 	global splits, splitBets
-	
+	while True:
+		if len(splitBets) > 0:
+			print("Current Bets:\n")
+		for key in splitBets:
+			if splitBets[key] > 0:
+				print("${bet} on the {sp} Split.".format(bet=splitBets[key], sp=key))
+		print("Type in the numbers you'd like to split separated by a hyphen:")
+		bet = input("> ")
+		if bet in splits:
+			print("How much on the {} split?".format(bet))
+			splitBets[bet] = betPrompt()
+			if splitBets[bet] == 0:
+				print("Taking down your {} bet.".format(bet))
+			else:
+				print("Ok, ${bet} on the {sp} Split.".format(bet=splitBets[bet], sp=bet))
+			continue
+		elif bet == 'cl':
+			print("Clearing all your Split bets.")
+			splitBets = {}
+		elif bet == 'x':
+			print("Exiting Split Bets...")
+			break
+		else:
+			print("That's not a valid Split!")
+			continue
+
+def street():
+	global streets, streetBets
+	while True:
+		if len(streetBets) > 0:
+			print("Current Bets:\n")
+		for key in streetBets:
+			if streetBets[key] > 0:
+				print("${bet} on Street {num}".format(bet=streetBets[key], num=key))
+		print("Choose your Street:\n")
+		for key in streets:
+			print("\t{num}. {street}".format(num=key, street=streets[key]))
+		choice = input("> ")
+		if choice == 'x':
+			print("Finishing Street Betting...")
+			break
+		elif choice == 'c':
+			print("Clearing your Street Bets.")
+			streetBets = {}
+			continue
+		elif int(choice) in streets:
+			print("How much on Street {}?".format(choice))
+			streetBets[int(choice)] = betPrompt()
+			if streetBets[int(choice)] == 0:
+				print("Taking down your Street {} bet.".format(choice))
+			else:
+				print("Ok, ${bet} on Street {num}.".format(bet=streetBets[int(choice)], num=choice))
+			continue
+		else:
+			print("Invalid entry! Try again!")
+			continue
+
+def corner():
+	global corners, cornerBets
+	while True:
+		if len(cornerBets) > 0:
+			print("Current Bets:\n")
+		for key in cornerBets:
+			if cornerBets[key] > 0:
+				print("${bet} on Corner {num}.".format(bet=cornerBets[key], num=key))
+		print("Choose your Corner Bet:\n")
+		for key in corners:
+			print("\t{key}. {val}.".format(key=key, val=corners[key]))
+		choice = input("> ")
+		if choice == 'x':
+			print("Finishing Corner Betting...")
+			break
+		elif choice == 'cl':
+			print("Clearing all your Corner Bets.")
+			cornerBets = {}
+			continue
+
+		elif int(choice) in corners:
+			print("How much on Corner {}?".format(choice))
+			cornerBets[int(choice)] = betPrompt()
+			if cornerBets[int(choice)] == 0:
+				print("Taking down your Corner {} bet.".format(choice))
+			else:
+				print("Ok, ${bet} on Corner {num}.".format(bet=cornerBets[int(choice)], num=choice))
+			continue
+		else:
+			print("That doesn't work! Try again.")
+			continue
+
 
 verbose = False
 

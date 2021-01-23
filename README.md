@@ -3,7 +3,7 @@ Accessible Terminal-based Roulette game
 
 ## What is Roulette?
 
-Roulette is a common casino game found around the world. It consists of a table that has 36 numbers laid out in a grid configuration 12 numbers across and 3 rows deep. The numbers 1-36 alternate between Red and Black, and there are two green spaces next to the first row of numbers for the 0 and Double-0.
+Roulette is a common casino game found around the world. It consists of a table that has 36 numbers laid out in a grid configuration 12 numbers across and 3 rows deep. The odd numbers between 1-10 and 19-28 are Red, while the odd numbers between 11-19 and 29-36 are Black, creating an alternating Red/Black pattern across the span of numbers, and there are two green spaces next to the first row of numbers for the 0 and Double-0.
 
 Surrounding this grid of numbers are boxes and areas in which specific outside bets can be made. Players can make Inside bets by placing chips directly on any number, or using any of the inside betting methods, plus they can bet on any of the outside betting boxes.
 
@@ -13,10 +13,73 @@ The dealer marks the number on the play surface, removes all the losing bets, th
 
 ## How to Play
 
-Under construction! Coding game at the moment....
+Balls to the Wheel will first prompt you to enter a bankroll. Type in how much you'd like to start with and hit Enter. Off you go!
 
+The game is played via a series of commands entered through prompts.  Simply enter the code for the bet you want at the Place Your Bets prompt and hit Enter, then follow the instructions.
+
+### Place Your Bets!
+
+This the main prompt for the game and will be the first one you encounter after entering your bankroll or spinning the wheel. This is where you'll enter the various betting modes, check what bets you have placed, toggle verbose mode, and pull up the Help prompt to check the bet codes if needed.
+* 'a': Show all your bets.
+* 'c': Show how much money you have out on the table.
+* 'v': Toggle verbose mode, where more details oabout the resulting number after the spin will be shown.
+* 'x': Finish betting and spin the wheel!
+
+### Outside Bets
+
+* '0': Bet on 0.
+* '00': Bet on DOuble-zero.
+* 'r': Bet on Red.
+* 'b': Bet on Black.
+* 'e': Bet on Even.
+* 'o': Bet on Odd.
+* 'c1' 'c2' c3': Bet on Columns 1-3; c1 = Column 1, c2 = Column 2, c3 = Column 3.
+* 'd1' 'd2' 'd3': Bet on Dozens. d1 = Numbers 1-12, d2 = Numbers 13-24, d3  = 25-36.
+* 'h1' 'h2': Bet on the 1st or 2nd half of the numbers, also known as Low/High.
+
+### Inside Bets
+
+All bets made within the number grid itself.
+
+* 'tl': Top Line bet; makes a bet on the 0, 00, 1, 2, and 3.
+* 'bk': Basket bet; a bet on the 0, 1, 2, and 3.
+* 'sn': Snake bet; a bet on the numbers 1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34.
+
+### Special Inside Bets
+
+Each of these bets will open up their own prompts. For all of these, you'll be given a choice to enter and then be prompted to put in the amount you want on the chosen bet. For all these bet types, typing 'cl' and hitting ENter will clear all the bets of that type when in the prompt.
+
+type 'x' and hit Enter to leave the betting mode and return to the main game screen.
+
+#### Straight Up
+
+'n': Typing 'n' and hitting Enter from he Place Your Bets prompt will open the Straight Up betting prompt. Enter any number between 1-36 to bet directly on it.
+
+#### Splits
+
+'sp': Type 'sp' and hit Enter to go into Split Betting mode. Splits are bets between two adjacent numbers that are touching on the grid. Enter the two numbers you want to split with a hyphen between them. For example, '1-2', '19-20', '9-12' and so on. Make sure to put the lower number first. There are 56 split combinations across the table, including the 0-00 split. 0 and 00 do not split with any other numbers except for themselves.
+
+#### Streets
+
+'st': Typing 'st' and hitting Enter from the main prompt will open up Street Betting. Streets are vertical groups of 3 numbers that you can bet on across the table. Street 1 contains the numbers 1, 2, and 3, etc. The prompt will show you exactly which numbers each street contains. Type the number of the Street you want to bet on and hit Enter to bring up the betting prompt, then enter the amount you want for that bet. There are 12 Streets across the table.
+
+#### Corner Bets
+
+'co': Typing 'co' and hitting Enter will open Corner Betting mode. Corners are groups of 4 adjacent numbers that are touching on the table. Corner 1 contains the numbers 1, 2, 4, and 5 for example. Each corner will be described in the prompt. There are 22 Corners to choose from across the table.
+
+#### Line Bets
+
+'l': Line bets are bets on two adjacent streets, so vertical blocks of 6 numbers. There are only 6 lines on the table; Line 1 contains the numbers 1 through 6, for example.
+
+### Finish Betting and Spin the Wheel!
+
+Once you are done placing your bets, typing 'x' and hitting Enter from the Place Your Bets prompt screen will spin the wheel. The ball will land on a number, your winning bets will get added to your bank, your losses will be subtracted, and all your bets are cleared and ready for the next round of betting.
+
+Verbose mode will call out the details of the spin, such as Red or Black, Even or Odd, High or Low, the Column, and the Street the number was in.
 
 ## Roulette Bets
+
+Here are more details about the individual bets you can make in both this game and Roulette in general.
 
 ### Outside Bets
 
@@ -30,9 +93,9 @@ Bet that the upcoming number is either Red or Black.
 
 Bet that the upcoming number is Even or Odd.
 
-#### High/Low
+#### High/Low, 1st and 2nd Half
 
-Bet that the upcoming number is either Low (1-18) or High (19-36).
+Bet that the upcoming number is either Low (1-18) or High (19-36). Also known as the 1st and 2nd Half of the numbers.
 
 #### Columns
 
@@ -58,7 +121,7 @@ All of these bets are placed within the grid of numbers and on the numbers thems
 
 #### Straight Up
 
-A vet on one specific number in the grid.
+A vet on one specific number in the grid. Any or all of the numbers between 1-36 can be bet on individually.
 
 #### Splits
 

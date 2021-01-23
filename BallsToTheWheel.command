@@ -2,7 +2,7 @@
 from random import *
 
 # Version Number
-version = "1.0"
+version = "1.5"
 
 
 # Table Setup
@@ -31,6 +31,7 @@ columns = {
 }
 
 splits = {
+"0-00": [0, 37],
 "1-2": [1, 2],
 "1-4": [1, 4],
 "2-3": [2, 3],
@@ -161,6 +162,39 @@ def spin():
 		print("The ball lands on Black {}!".format(spinOut))
 	return spinOut
 
+def betCount(choice):
+	count = 0
+	for key in outBets:
+		count += outBets[key]
+		if choice == 'a' and outBets[key] > 0:
+			print("${amt} on {bet}.".format(amt=outBets[key], bet=key))
+	for key in inBets:
+		count += inBets[key]
+		if choice == 'a' and inBets[key] > 0:
+			print("${amt} on the {bet} bet.".format(amt=inBets[key], bet=key))
+	for key in straightUp:
+		count += straightUp[key]
+		if choice == 'a' and straightUp[key] > 0:
+			print("${amt} on {bet}.".format(amt=StraightUp[key], bet=key))
+	for key in splitBets:
+		count += splitBets[key]
+		if choice == 'a' and splitBets[key] > 0:
+			print("${amt} on the {sp} Split.".format(amt=splitBets[key], sp=key))
+	for key in streetBets:
+		count += streetBets[key]
+		if choice == 'a' and streetBets[key] > 0:
+			print("${amt} on Street {st}.".format(amt=streetBets[key], st=key))
+	for key in cornerBets:
+		count += cornerBets[key]
+		if choice == 'a' and cornerBets[key] > 0:
+			print("${amt} on Corner {c}.".format(amt=cornerBets[key], c=key))
+	for key in lineBets:
+		count += lineBets[key]
+		if choice == 'a' and lineBets[key] > 0:
+			print("${amt} on Line {l}.".format(amt=lineBets[key], l=key))
+	print("You have ${} out on the table!".format(count))
+
+
 def roulette():
 	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, lineBets, bank, verbose
 
@@ -210,6 +244,23 @@ def roulette():
 				print("You lost ${num} from the {bet} bet.".format(num=outBets[key], bet=key))
 				bank -= outBets[key]
 			outBets[key] = 0
+
+	for key in inBets:
+		payout = 0
+		if inBets[key] > 0:
+			if key == "Top Line" and ball in [0, 1, 2, 3, 37] or key == "Basket" and ball in range(4):
+				payout += inBets[key] * 6
+			elif key == '0' and ball == '0' or key == '00' and ball == '37':
+				payout += inBets[key] * 35
+			elif key == "Snake" and ball in [1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, 34]:
+				payout += inBets[key] * 2
+			if payout > 0:
+				print("You won ${win} on the {bet}!".format(win=payout, bet=key))
+				bank += payout
+			else:
+				print("You lost ${loss} from the {bet} bet.".format(loss=inBets[key], bet=key))
+				bank -= inBets[key]
+			inBets[key] = 0
 
 	for key in straightUp:
 		if straightUp[key] > 0:
@@ -341,7 +392,9 @@ outBets = {
 inBets = {
 "Top Line": 0,
 "Basket": 0,
-"Snake": 0
+"Snake": 0,
+"0": 0,
+"00": 0
 }
 
 def bet(choice):
@@ -375,6 +428,18 @@ def bet(choice):
 		print("How much on {}?".format(pick))
 		outBets[pick] = betPrompt()
 		print("Ok, ${num} on {bet}.".format(num=outBets[pick], bet=pick))
+	elif choice in ['sn', 'tl', 'bk', '0', '00']:
+		if choice in ['0', '00']:
+			pick = choice
+		elif choice == 'tl':
+			pick = "Top Line"
+		elif choice == 'sn':
+			pick = "Snake"
+		elif choice == 'bk':
+			pick = "Basket"
+		print("How much on the {} bet?".format(pick))
+		inBets[pick] = betPrompt()
+		print("Ok, ${num} on the {bet} bet.".format(num=inBets[pick], bet=pick))
 	elif choice == 'n':
 		straight()
 	elif choice == 'sp':
@@ -385,8 +450,16 @@ def bet(choice):
 		line()
 	elif choice == 'co':
 		corner()
+	elif choice in ['a', 'c']:
+		betCount(choice)
+	elif choice == 'h':
+		help()
 	else:
 		print("That's not a bet! Try again.")
+
+def help():
+	print("Codes for the Place Your Bet prompt:\n")
+	print("\t0: Bet on 0\n\t00: Bet on Double 0.\n\ta: Show all current bets.\n\tb: Bet on Black.\n\tbk: Bet on the Basket.\n\tc: Show total amount of money on the table.\n\tc1: Bet on Column 1.\n\tc2: Bet on Column 2.\n\tc3: Bet on Column 3.\n\tco: Bet on Corners.\n\td1: Bet on 1st Dozen.\n\td2: Bet on 2nd Dozen.\n\td3: Bet on 3rd Dozen.\n\te: Bet on Even Numbers.\n\th1: Bet on 1st Half/Low.\n\th2: Bet on 2nd Half/High\n\tl: Bet on Lines.\n\tn: Bet on straight up numbers.\n\to: Bet on Odd Numbers.\n\tr: Bet on Red.\n\tsp: Bet on Splits\n\tst: Bet on Streets.\n\ttl: Bet on Top Line.\n\tv: Toggle Verbose mode for spins.")
 
 def straight():
 	global straightUp

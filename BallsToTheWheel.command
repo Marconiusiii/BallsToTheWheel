@@ -148,7 +148,7 @@ snake = [1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, 34]
 # Spin Function
 
 def spin():
-	global red, black
+	global red, black, record
 	spinOut = randint(0, 37)
 	print("\t\tSpinning the wheel!")
 
@@ -160,6 +160,12 @@ def spin():
 		print("The ball lands on Red {}!".format(spinOut))
 	elif spinOut in black:
 		print("The ball lands on Black {}!".format(spinOut))
+
+	if len(record) <= 10:
+		record.append(spinOut)
+	else:
+		record.pop(0)
+		record.append(spinOut)
 	return spinOut
 
 def betCount(choice):
@@ -194,6 +200,9 @@ def betCount(choice):
 			print("${amt} on Line {l}.".format(amt=lineBets[key], l=key))
 	print("You have ${} out on the table!".format(count))
 
+# Gameplay Function
+
+record = []
 
 def roulette():
 	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, lineBets, bank, verbose
@@ -398,7 +407,7 @@ inBets = {
 }
 
 def bet(choice):
-	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp
+	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp, record
 	pick = ''
 	if choice in ['r', 'b', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3', 'o', 'e', 'h1', 'h2']:
 		if choice.lower() == 'r':
@@ -454,12 +463,14 @@ def bet(choice):
 		betCount(choice)
 	elif choice == 'h':
 		help()
+	elif choice == 're':
+		print("Spin History:\n{}".format(record))
 	else:
 		print("That's not a bet! Try again.")
 
 def help():
 	print("Codes for the Place Your Bet prompt:\n")
-	print("\t0: Bet on 0\n\t00: Bet on Double 0.\n\ta: Show all current bets.\n\tb: Bet on Black.\n\tbk: Bet on the Basket.\n\tc: Show total amount of money on the table.\n\tc1: Bet on Column 1.\n\tc2: Bet on Column 2.\n\tc3: Bet on Column 3.\n\tco: Bet on Corners.\n\td1: Bet on 1st Dozen.\n\td2: Bet on 2nd Dozen.\n\td3: Bet on 3rd Dozen.\n\te: Bet on Even Numbers.\n\th1: Bet on 1st Half/Low.\n\th2: Bet on 2nd Half/High\n\tl: Bet on Lines.\n\tn: Bet on straight up numbers.\n\to: Bet on Odd Numbers.\n\tr: Bet on Red.\n\tsp: Bet on Splits\n\tst: Bet on Streets.\n\ttl: Bet on Top Line.\n\tv: Toggle Verbose mode for spins.")
+	print("\t0: Bet on 0\n\t00: Bet on Double 0.\n\ta: Show all current bets.\n\tb: Bet on Black.\n\tbk: Bet on the Basket.\n\tc: Show total amount of money on the table.\n\tc1: Bet on Column 1.\n\tc2: Bet on Column 2.\n\tc3: Bet on Column 3.\n\tco: Bet on Corners.\n\td1: Bet on 1st Dozen.\n\td2: Bet on 2nd Dozen.\n\td3: Bet on 3rd Dozen.\n\te: Bet on Even Numbers.\n\th1: Bet on 1st Half/Low.\n\th2: Bet on 2nd Half/High\n\tl: Bet on Lines.\n\tn: Bet on straight up numbers.\n\to: Bet on Odd Numbers.\n\tr: Bet on Red.\n\tre: Show the past 10 spin results.\n\tsp: Bet on Splits\n\tst: Bet on Streets.\n\ttl: Bet on Top Line.\n\tv: Toggle Verbose mode for spins.")
 
 def straight():
 	global straightUp
@@ -520,7 +531,7 @@ def street():
 			print("Current Bets:\n")
 		for key in streetBets:
 			if streetBets[key] > 0:
-				print("${bet} on Street {num}".format(bet=streetBets[key], num=key))
+				print("${bet} on Street {num}.".format(bet=streetBets[key], num=key))
 		print("Choose your Street:\n")
 		for key in streets:
 			print("\t{num}. Street {i}, {street}".format(num=key, i=streets[key][0], street=streets[key]))

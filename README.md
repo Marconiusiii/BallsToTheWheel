@@ -22,7 +22,8 @@ The game is played via a series of commands entered through prompts.  Simply ent
 This the main prompt for the game and will be the first one you encounter after entering your bankroll or spinning the wheel. This is where you'll enter the various betting modes, check what bets you have placed, toggle verbose mode, and pull up the Help prompt to check the bet codes if needed.
 * 'a': Show all your bets.
 * 'c': Show how much money you have out on the table.
-* 'v': Toggle verbose mode, where more details oabout the resulting number after the spin will be shown.
+* 're': Show the last 10 spin results.
+* 'v': Toggle verbose mode, where more details about the resulting number after the spin will be shown.
 * 'x': Finish betting and spin the wheel!
 
 ### Outside Bets

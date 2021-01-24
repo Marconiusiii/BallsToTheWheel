@@ -2,7 +2,7 @@
 from random import *
 
 # Version Number
-version = "1.5"
+version = "1.7.5"
 
 
 # Table Setup
@@ -205,7 +205,7 @@ def betCount(choice):
 record = []
 
 def roulette():
-	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, lineBets, bank, verbose
+	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, lineBets, bank, chipsOnTable, verbose
 
 	ball = spin()
 	outcome = ''
@@ -252,6 +252,7 @@ def roulette():
 			else:
 				print("You lost ${num} from the {bet} bet.".format(num=outBets[key], bet=key))
 				bank -= outBets[key]
+			chipsOnTable -= outBets[key]
 			outBets[key] = 0
 
 	for key in inBets:
@@ -269,10 +270,12 @@ def roulette():
 			else:
 				print("You lost ${loss} from the {bet} bet.".format(loss=inBets[key], bet=key))
 				bank -= inBets[key]
+			chipsOnTable -= inBets[key]
 			inBets[key] = 0
 
 	for key in straightUp:
 		if straightUp[key] > 0:
+			chipsOnTable -= straightUp[key]
 			if ball == key:
 				print("Holy crap! You won ${win} on the {num}!".format(win=straightUp[key]*35, num=key))
 				bank += straightUp[key] * 35
@@ -284,6 +287,7 @@ def roulette():
 # Split Bets Payout
 	for key in splitBets:
 		if splitBets[key] > 0:
+			chipsOnTable -= splitBets[key]
 			if ball in splitBets:
 				print("Holy Pants! You won ${win} on the {sp} Split!".format(win=splitBets[key]*17, sp=key))
 				bank += splitBets[key] * 17
@@ -295,6 +299,7 @@ def roulette():
 # Street Bets Payout
 	for key in streetBets:
 		if streetBets[key] > 0:
+			chipsOnTable -= streetBets[key]
 			if ball in streets[key]:
 				print("Wowsers! You won ${win} on Street {num}!".format(win=streetBets[key]*11, num=key))
 				bank += streetBets[key] * 11
@@ -306,6 +311,7 @@ def roulette():
 # Corner Bet Payout
 	for key in cornerBets:
 		if cornerBets[key] > 0:
+			chipsOnTable -= cornerBets[key]
 			if ball in corners[key]:
 				print("Woohoo! You won ${win} on Corner {num}!".format(win=cornerBets[key]*8, num=key))
 				bank += cornerBets[key] * 8
@@ -317,6 +323,7 @@ def roulette():
 # Line Bet Payout
 	for key in lineBets:
 		if lineBets[key] > 0:
+			chipsOnTable -= lineBets[key]
 			if ball in lines[key]:
 				print("Nice, you won ${win} on Line {num}!".format(win=lineBets[key] * 5, num=key))
 				bank += lineBets[key] * 5
@@ -325,15 +332,19 @@ def roulette():
 				bank -= lineBets[key]
 	lineBets = {}
 
-
-
 # Bet Prompt and Out of Money
 
+chipsOnTable = 0
+
 def betPrompt():
-	global bank
+	global bank, chipsOnTable
 	while True:
 		try:
 			playerBet =  int(input("\t$> "))
+			chipsOnTable += playerBet
+			if chipsOnTable > bank:
+				print("\tYou don't have enough money for that bet!")
+				continue
 		except ValueError:
 			print("\tThat wasn't a number!")
 			continue
@@ -343,9 +354,9 @@ def betPrompt():
 			if addMore.lower() in ['y', 'yes', 'atm', 'help', 'more money']:
 				outOfMoney()
 			continue
-		elif playerBet <= 0:
-			print("Nice try, hot shot. You have to make a bet to play!")
-			continue
+#		elif playerBet <= 0:
+#			print("Nice try, hot shot. You have to make a bet to play!")
+#			continue
 		else:
 			return playerBet
 
@@ -365,7 +376,7 @@ def outOfMoney():
 			print("\tWhat am I, a bank? This is for withdrawals only! Try again.")
 			continue
 		else:
-			bank += cash
+			bank = cash
 			break
 	print("\tAlright, starting you off again with ${}. Don't lose it all this time!".format(bank))
 
@@ -407,7 +418,7 @@ inBets = {
 }
 
 def bet(choice):
-	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp, record
+	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp, chipsOnTable, record
 	pick = ''
 	if choice in ['r', 'b', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3', 'o', 'e', 'h1', 'h2']:
 		if choice.lower() == 'r':
@@ -434,9 +445,14 @@ def bet(choice):
 			pick = "Column 2"
 		elif choice == 'c3':
 			pick = "Column 3"
+		if outBets[pick] > 0:
+			chipsOnTable -= outBets[pick]
 		print("How much on {}?".format(pick))
 		outBets[pick] = betPrompt()
-		print("Ok, ${num} on {bet}.".format(num=outBets[pick], bet=pick))
+		if outBets[pick] == 0:
+			print("Ok, taking down your {} bet.".format(pick))
+		else:
+			print("Ok, ${num} on {bet}.".format(num=outBets[pick], bet=pick))
 	elif choice in ['sn', 'tl', 'bk', '0', '00']:
 		if choice in ['0', '00']:
 			pick = choice
@@ -446,9 +462,14 @@ def bet(choice):
 			pick = "Snake"
 		elif choice == 'bk':
 			pick = "Basket"
+		if inBets[pick] > 0:
+			chipsOnTable -= inBets[pick]
 		print("How much on the {} bet?".format(pick))
 		inBets[pick] = betPrompt()
-		print("Ok, ${num} on the {bet} bet.".format(num=inBets[pick], bet=pick))
+		if inBets[pick] == 0:
+			print("Ok, taking down your {} bet.".format(pick))
+		else:
+			print("Ok, ${num} on the {bet} bet.".format(num=inBets[pick], bet=pick))
 	elif choice == 'n':
 		straight()
 	elif choice == 'sp':
@@ -473,31 +494,40 @@ def help():
 	print("\t0: Bet on 0\n\t00: Bet on Double 0.\n\ta: Show all current bets.\n\tb: Bet on Black.\n\tbk: Bet on the Basket.\n\tc: Show total amount of money on the table.\n\tc1: Bet on Column 1.\n\tc2: Bet on Column 2.\n\tc3: Bet on Column 3.\n\tco: Bet on Corners.\n\td1: Bet on 1st Dozen.\n\td2: Bet on 2nd Dozen.\n\td3: Bet on 3rd Dozen.\n\te: Bet on Even Numbers.\n\th1: Bet on 1st Half/Low.\n\th2: Bet on 2nd Half/High\n\tl: Bet on Lines.\n\tn: Bet on straight up numbers.\n\to: Bet on Odd Numbers.\n\tr: Bet on Red.\n\tre: Show the past 10 spin results.\n\tsp: Bet on Splits\n\tst: Bet on Streets.\n\ttl: Bet on Top Line.\n\tv: Toggle Verbose mode for spins.")
 
 def straight():
-	global straightUp
+	global straightUp, chipsOnTable
+	bet = '0'
 	while True:
+		if len(straightUp) > 0:
+			print("Current Bets:\n")
 		for key in straightUp:
 			if straightUp[key] > 0:
-				print("Current Bets:\n")
-				for bets in straightUp:
-					if straightUp[bets] > 0:
-						print("${bet} on {num}.".format(bet=straightUp[bets], num=bets))
-				break
+				print("${amt} on {num}.".format(amt=straightUp[key], num=key))
 		print("Enter the number you want to bet! 1-36: ")
-		try:
-			bet = int(input("> "))
-		except ValueError:
+		while True:
+			try:
+				bet = input("> ")
+				break
+			except ValueError:
+				pass
+		if bet == 'x':
+			print("Finishing Straight Up Betting...")
 			break
-		if bet in range(1, 37):
+		elif int(bet) in range(1, 37):
 			print("How much on {}?".format(bet))
+			if bet in straightUp:
+				chipsOnTable -= straightUp[bet]
 			straightUp[bet] = betPrompt()
-			print("Ok, ${bet} on {num}.".format(bet=straightUp[bet], num=bet))
+			if straightUp[bet] == 0:
+				print("Ok, taking down your {} bet.".format(bet))
+			else:
+				print("Ok, ${bet} on {num}.".format(bet=straightUp[bet], num=bet))
 			continue
 		else:
-			print("Ending straight up number betting.")
-			break
+			print("Invalid number! Try again.")
+			continue
 
 def split():
-	global splits, splitBets
+	global splits, splitBets, chipsOnTable
 	while True:
 		if len(splitBets) > 0:
 			print("Current Bets:\n")
@@ -508,6 +538,8 @@ def split():
 		bet = input("> ")
 		if bet in splits:
 			print("How much on the {} split?".format(bet))
+			if bet in splitBets:
+				chipsOnTable -= splitBets[bet]
 			splitBets[bet] = betPrompt()
 			if splitBets[bet] == 0:
 				print("Taking down your {} bet.".format(bet))
@@ -516,6 +548,8 @@ def split():
 			continue
 		elif bet == 'cl':
 			print("Clearing all your Split bets.")
+			for key in splitBets:
+				chipsOnTable -= splitBets[key]
 			splitBets = {}
 		elif bet == 'x':
 			print("Exiting Split Bets...")
@@ -525,7 +559,7 @@ def split():
 			continue
 
 def street():
-	global streets, streetBets
+	global streets, streetBets, chipsOnTable
 	while True:
 		if len(streetBets) > 0:
 			print("Current Bets:\n")
@@ -541,10 +575,14 @@ def street():
 			break
 		elif choice == 'c':
 			print("Clearing your Street Bets.")
+			for key in streetBets:
+				chipsOnTable -= streetBets[key]
 			streetBets = {}
 			continue
 		elif choice in streets:
 			print("How much on Street {}?".format(choice))
+			if choice in streetBets:
+				chipsOnTable -= streetBets[choice]
 			streetBets[choice] = betPrompt()
 			if streetBets[choice] == 0:
 				print("Taking down your Street {} bet.".format(choice))
@@ -556,7 +594,7 @@ def street():
 			continue
 
 def corner():
-	global corners, cornerBets
+	global corners, cornerBets, chipsOnTable
 	while True:
 		if len(cornerBets) > 0:
 			print("Current Bets:\n")
@@ -572,10 +610,14 @@ def corner():
 			break
 		elif choice == 'cl':
 			print("Clearing all your Corner Bets.")
+			for key in cornerBets:
+				chipsOnTable -= cornerBets[key]
 			cornerBets = {}
 			continue
 		elif choice in corners:
 			print("How much on Corner {}?".format(choice))
+			if choice in cornerBets:
+				chipsOnTable -= cornerBets[choice]
 			cornerBets[choice] = betPrompt()
 			if cornerBets[choice] == 0:
 				print("Taking down your Corner {} bet.".format(choice))
@@ -587,7 +629,7 @@ def corner():
 			continue
 
 def line():
-	global lines, lineBets
+	global lines, lineBets, chipsOnTable
 	while True:
 		if len(lineBets) > 0:
 			print("Current Bets:\n")
@@ -602,12 +644,19 @@ def line():
 			break
 		elif choice == 'cl':
 			print("Clearing your Line bets.")
+			for key in lineBets:
+				chipsOnTable -= lineBets[key]
 			lineBets = {}
 			continue
 		elif choice in lines:
 			print("How much on Line {}?".format(choice))
+			if choice in lineBets:
+				chipsOnTable -= lineBets[choice]
 			lineBets[choice] = betPrompt()
-			print("Ok, ${bet} on Line {num}.".format(bet=lineBets[choice], num=choice))
+			if lineBets[choice] == 0:
+				print("Ok, taking down your bet on Line {}.".format(choice))
+			else:
+				print("Ok, ${bet} on Line {num}.".format(bet=lineBets[choice], num=choice))
 			continue
 		else:
 			print("That's not a Line! Try again.")
@@ -630,7 +679,10 @@ print("Great, starting off with ${bank}. Good luck!".format(bank=bank))
 
 
 while True:
-	print("You have ${} in the bank.".format(bank))
+	if chipsOnTable == 0:
+		print("You have ${} in the bank.".format(bank))
+	else:
+		print("You have ${bank} in the bank and ${chips} on the table.".format(bank=bank, chips=chipsOnTable))
 	print("Place your Bets!")
 	choice = input("> ")
 	if choice == 'v' and verbose == False:

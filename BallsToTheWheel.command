@@ -505,11 +505,13 @@ def straight():
 		print("Enter the number you want to bet! 1-36: ")
 		while True:
 			try:
-				bet = input("> ")
+				user = int(input("> "))
 				break
 			except ValueError:
-				pass
-		if bet == 'x':
+				user = '0'
+				break
+		bet = user
+		if bet in ['x', '0'] or bet == None:
 			print("Finishing Straight Up Betting...")
 			break
 		elif int(bet) in range(1, 37):

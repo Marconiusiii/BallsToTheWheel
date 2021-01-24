@@ -54,7 +54,7 @@ type 'x' and hit Enter to leave the betting mode and return to the main game scr
 
 #### Straight Up
 
-'n': Typing 'n' and hitting Enter from he Place Your Bets prompt will open the Straight Up betting prompt. Enter any number between 1-36 to bet directly on it.
+'n': Typing 'n' and hitting Enter from he Place Your Bets prompt will open the Straight Up betting prompt. Enter any number between 1-36 to bet directly on it. Hitting Enter at this prompt wihtout entering anything will exit this mode and return you to the main game screen.
 
 #### Splits
 

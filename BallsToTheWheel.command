@@ -2,7 +2,7 @@
 from random import *
 
 # Version Number
-version = "1.7.5"
+version = "1.8"
 
 
 # Table Setup
@@ -206,7 +206,7 @@ record = []
 
 def roulette():
 	global red, black, even, odd, dozens, half, straightUp, splits, corners, streets, lines, columns, outBets, inBets, splitBets, streetBets, cornerBets, lineBets, bank, chipsOnTable, verbose
-
+	net = 0
 	ball = spin()
 	outcome = ''
 
@@ -249,9 +249,11 @@ def roulette():
 			if payout > 0:
 				print("You won ${num} on the {bet} bet!".format(num=payout, bet=key))
 				bank += payout
+				net += payout
 			else:
 				print("You lost ${num} from the {bet} bet.".format(num=outBets[key], bet=key))
 				bank -= outBets[key]
+				net -= outBets[key]
 			chipsOnTable -= outBets[key]
 			outBets[key] = 0
 
@@ -267,9 +269,11 @@ def roulette():
 			if payout > 0:
 				print("You won ${win} on the {bet}!".format(win=payout, bet=key))
 				bank += payout
+				net += payout
 			else:
 				print("You lost ${loss} from the {bet} bet.".format(loss=inBets[key], bet=key))
 				bank -= inBets[key]
+				net -= inBets[key]
 			chipsOnTable -= inBets[key]
 			inBets[key] = 0
 
@@ -279,9 +283,11 @@ def roulette():
 			if ball == key:
 				print("Holy crap! You won ${win} on the {num}!".format(win=straightUp[key]*35, num=key))
 				bank += straightUp[key] * 35
+				net += straightUp[key] * 35
 			else:
 				print("You lost ${lose} from the {num}.".format(lose=straightUp[key], num=key))
 				bank -= straightUp[key]
+				net -= straightUp[key]
 	straightUp = {}
 
 # Split Bets Payout
@@ -291,9 +297,11 @@ def roulette():
 			if ball in splitBets:
 				print("Holy Pants! You won ${win} on the {sp} Split!".format(win=splitBets[key]*17, sp=key))
 				bank += splitBets[key] * 17
+				net += splitBets[key] * 17
 			else:
 				print("You lost ${loss} from the {sp} Split.".format(loss=splitBets[key], sp=key))
 				bank -= splitBets[key]
+				net -= splitBets[key]
 	splitBets = {}
 
 # Street Bets Payout
@@ -303,9 +311,11 @@ def roulette():
 			if ball in streets[key]:
 				print("Wowsers! You won ${win} on Street {num}!".format(win=streetBets[key]*11, num=key))
 				bank += streetBets[key] * 11
+				net += streetBets[key] * 11
 			else:
 				print("You lost ${loss} from Street {key}.".format(loss=streetBets[key], key=key))
 				bank -= streetBets[key]
+				net -= streetBets[key]
 	streetBets = {}
 
 # Corner Bet Payout
@@ -315,9 +325,11 @@ def roulette():
 			if ball in corners[key]:
 				print("Woohoo! You won ${win} on Corner {num}!".format(win=cornerBets[key]*8, num=key))
 				bank += cornerBets[key] * 8
+				net += cornerBets[key] * 8
 			else:
 				print("You lost ${loss} from Corner {num}.".format(loss=cornerBets[key], num=key))
 				bank -= cornerBets[key]
+				net -= cornerBets[key]
 	cornerBets = {}
 
 # Line Bet Payout
@@ -327,10 +339,18 @@ def roulette():
 			if ball in lines[key]:
 				print("Nice, you won ${win} on Line {num}!".format(win=lineBets[key] * 5, num=key))
 				bank += lineBets[key] * 5
+				net += lineBets[key] * 5
 			else:
 				print("You lost ${loss} from Line {num}.".format(loss=lineBets[key], num=key))
 				bank -= lineBets[key]
+				net -= lineBets[key]
 	lineBets = {}
+	if net > 0:
+		print("You won a total of ${}!".format(net))
+	elif net < 0:
+		print("You lost a total of ${}.".format(net))
+	else:
+		pass
 
 # Bet Prompt and Out of Money
 

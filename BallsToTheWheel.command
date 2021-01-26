@@ -2,7 +2,7 @@
 from random import *
 
 # Version Number
-version = "1.8"
+version = "1.9"
 
 
 # Table Setup
@@ -252,7 +252,7 @@ def roulette():
 				net += payout
 			else:
 				print("You lost ${num} from the {bet} bet.".format(num=outBets[key], bet=key))
-				bank -= outBets[key]
+				#bank -=outBets[key]
 				net -= outBets[key]
 			chipsOnTable -= outBets[key]
 			outBets[key] = 0
@@ -272,7 +272,7 @@ def roulette():
 				net += payout
 			else:
 				print("You lost ${loss} from the {bet} bet.".format(loss=inBets[key], bet=key))
-				bank -= inBets[key]
+				#bank -=inBets[key]
 				net -= inBets[key]
 			chipsOnTable -= inBets[key]
 			inBets[key] = 0
@@ -286,7 +286,7 @@ def roulette():
 				net += straightUp[key] * 35
 			else:
 				print("You lost ${lose} from the {num}.".format(lose=straightUp[key], num=key))
-				bank -= straightUp[key]
+				#bank -=straightUp[key]
 				net -= straightUp[key]
 	straightUp = {}
 
@@ -300,7 +300,7 @@ def roulette():
 				net += splitBets[key] * 17
 			else:
 				print("You lost ${loss} from the {sp} Split.".format(loss=splitBets[key], sp=key))
-				bank -= splitBets[key]
+				#bank -=splitBets[key]
 				net -= splitBets[key]
 	splitBets = {}
 
@@ -314,7 +314,7 @@ def roulette():
 				net += streetBets[key] * 11
 			else:
 				print("You lost ${loss} from Street {key}.".format(loss=streetBets[key], key=key))
-				bank -= streetBets[key]
+				#bank -=streetBets[key]
 				net -= streetBets[key]
 	streetBets = {}
 
@@ -328,7 +328,7 @@ def roulette():
 				net += cornerBets[key] * 8
 			else:
 				print("You lost ${loss} from Corner {num}.".format(loss=cornerBets[key], num=key))
-				bank -= cornerBets[key]
+				#bank -=cornerBets[key]
 				net -= cornerBets[key]
 	cornerBets = {}
 
@@ -342,7 +342,7 @@ def roulette():
 				net += lineBets[key] * 5
 			else:
 				print("You lost ${loss} from Line {num}.".format(loss=lineBets[key], num=key))
-				bank -= lineBets[key]
+				#bank -=lineBets[key]
 				net -= lineBets[key]
 	lineBets = {}
 	if net > 0:
@@ -361,23 +361,28 @@ def betPrompt():
 	while True:
 		try:
 			playerBet =  int(input("\t$> "))
-			chipsOnTable += playerBet
-			if chipsOnTable > bank:
-				print("\tYou don't have enough money for that bet!")
-				continue
+			bank -=playerBet
+#			if chipsOnTable >= bank:
+#				print("\tYou don't have enough money for that bet! Need more chips? y/n")
+#				moreChips = input("> ")
+#				if moreChips in ['y', 'yes']:
+#					outOfMoney()
+#					continue
+#				else:
+#					print("Alright, no more chips for you!")
+#					playerBet = 0
+#				return playerBet
 		except ValueError:
 			print("\tThat wasn't a number!")
 			continue
-		if playerBet > bank:
+		if playerBet > bank and bank != 0:
 			print("\tYou simply don't have enough money to do that! DO you want to add more to your bankroll?")
 			addMore = input(">")
 			if addMore.lower() in ['y', 'yes', 'atm', 'help', 'more money']:
 				outOfMoney()
 			continue
-#		elif playerBet <= 0:
-#			print("Nice try, hot shot. You have to make a bet to play!")
-#			continue
 		else:
+			chipsOnTable += playerBet
 			return playerBet
 
 def outOfMoney():
@@ -699,8 +704,8 @@ while True:
 		continue
 print("Great, starting off with ${bank}. Good luck!".format(bank=bank))
 
-
 while True:
+
 	if chipsOnTable == 0:
 		print("You have ${} in the bank.".format(bank))
 	else:

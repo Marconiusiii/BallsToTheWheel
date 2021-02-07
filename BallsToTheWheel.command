@@ -2,7 +2,7 @@
 from random import *
 
 # Version Number
-version = "1.9"
+version = "1.9.5"
 
 
 # Table Setup
@@ -248,8 +248,8 @@ def roulette():
 				payout = 0
 			if payout > 0:
 				print("You won ${num} on the {bet} bet!".format(num=payout, bet=key))
-				bank += payout
-				net += payout
+				bank += payout + outBets[key]
+				net += payout 
 			else:
 				print("You lost ${num} from the {bet} bet.".format(num=outBets[key], bet=key))
 				#bank -=outBets[key]
@@ -269,7 +269,7 @@ def roulette():
 			if payout > 0:
 				print("You won ${win} on the {bet}!".format(win=payout, bet=key))
 				bank += payout
-				net += payout
+				net += payout + inBets[key]
 			else:
 				print("You lost ${loss} from the {bet} bet.".format(loss=inBets[key], bet=key))
 				#bank -=inBets[key]
@@ -282,7 +282,7 @@ def roulette():
 			chipsOnTable -= straightUp[key]
 			if ball == key:
 				print("Holy crap! You won ${win} on the {num}!".format(win=straightUp[key]*35, num=key))
-				bank += straightUp[key] * 35
+				bank += straightUp[key] + straightUp[key] * 35
 				net += straightUp[key] * 35
 			else:
 				print("You lost ${lose} from the {num}.".format(lose=straightUp[key], num=key))
@@ -296,7 +296,7 @@ def roulette():
 			chipsOnTable -= splitBets[key]
 			if ball in splitBets:
 				print("Holy Pants! You won ${win} on the {sp} Split!".format(win=splitBets[key]*17, sp=key))
-				bank += splitBets[key] * 17
+				bank += splitBets[key] + splitBets[key] * 17
 				net += splitBets[key] * 17
 			else:
 				print("You lost ${loss} from the {sp} Split.".format(loss=splitBets[key], sp=key))
@@ -310,7 +310,7 @@ def roulette():
 			chipsOnTable -= streetBets[key]
 			if ball in streets[key]:
 				print("Wowsers! You won ${win} on Street {num}!".format(win=streetBets[key]*11, num=key))
-				bank += streetBets[key] * 11
+				bank += streetBets[key] + streetBets[key] * 11
 				net += streetBets[key] * 11
 			else:
 				print("You lost ${loss} from Street {key}.".format(loss=streetBets[key], key=key))
@@ -324,7 +324,7 @@ def roulette():
 			chipsOnTable -= cornerBets[key]
 			if ball in corners[key]:
 				print("Woohoo! You won ${win} on Corner {num}!".format(win=cornerBets[key]*8, num=key))
-				bank += cornerBets[key] * 8
+				bank += cornerBets[key] + cornerBets[key] * 8
 				net += cornerBets[key] * 8
 			else:
 				print("You lost ${loss} from Corner {num}.".format(loss=cornerBets[key], num=key))
@@ -338,7 +338,7 @@ def roulette():
 			chipsOnTable -= lineBets[key]
 			if ball in lines[key]:
 				print("Nice, you won ${win} on Line {num}!".format(win=lineBets[key] * 5, num=key))
-				bank += lineBets[key] * 5
+				bank += lineBets[key] + lineBets[key] * 5
 				net += lineBets[key] * 5
 			else:
 				print("You lost ${loss} from Line {num}.".format(loss=lineBets[key], num=key))
@@ -361,17 +361,6 @@ def betPrompt():
 	while True:
 		try:
 			playerBet =  int(input("\t$> "))
-			bank -=playerBet
-#			if chipsOnTable >= bank:
-#				print("\tYou don't have enough money for that bet! Need more chips? y/n")
-#				moreChips = input("> ")
-#				if moreChips in ['y', 'yes']:
-#					outOfMoney()
-#					continue
-#				else:
-#					print("Alright, no more chips for you!")
-#					playerBet = 0
-#				return playerBet
 		except ValueError:
 			print("\tThat wasn't a number!")
 			continue
@@ -383,6 +372,7 @@ def betPrompt():
 			continue
 		else:
 			chipsOnTable += playerBet
+			bank -=playerBet
 			return playerBet
 
 def outOfMoney():
@@ -443,7 +433,7 @@ inBets = {
 }
 
 def bet(choice):
-	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp, chipsOnTable, record
+	global outBets, inBets, splitBets, cornerBets, streetBets, lineBets, splits, corners, streets, lines, straightUp, chipsOnTable, bank, record
 	pick = ''
 	if choice in ['r', 'b', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3', 'o', 'e', 'h1', 'h2']:
 		if choice.lower() == 'r':
@@ -472,6 +462,7 @@ def bet(choice):
 			pick = "Column 3"
 		if outBets[pick] > 0:
 			chipsOnTable -= outBets[pick]
+			bank += outBets[pick]
 		print("How much on {}?".format(pick))
 		outBets[pick] = betPrompt()
 		if outBets[pick] == 0:
